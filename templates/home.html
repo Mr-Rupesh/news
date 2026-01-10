@@ -12,6 +12,9 @@ Home
             {% csrf_token %}
             <button type="submit">Log Out</button>
         </form>
+        <br/>
+        <p><a class="btn btn-primary" href="{% url 'article_list' %}" role="button"> 
+            View all article</a></p> 
     {% else %}
         <p>You are not logged in</p>
 
