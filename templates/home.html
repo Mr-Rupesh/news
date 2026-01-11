@@ -1,24 +1,71 @@
 {% extends "base.html" %}
 
 {% block title %}
-Home
+Home | Xnews
 {% endblock title %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <p>Hi {{ user.username }}! You are {{ user.age }} years old.</p>
 
-        <form action="{% url 'logout' %}" method="post">
+<div class="text-center mt-5">
+
+  {% if user.is_authenticated %}
+
+    <!-- Welcome Card -->
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+      <div class="card-body">
+
+        <h3 class="card-title mb-3">
+          👋 Welcome, {{ user.username }}!
+        </h3>
+
+        <p class="text-muted">
+          You are {{ user.age }} years old.
+        </p>
+
+        <div class="d-grid gap-2 mt-4">
+          <a href="{% url 'article_list' %}" class="btn btn-primary">
+            📰 View All Articles
+          </a>
+
+          <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
-            <button type="submit">Log Out</button>
-        </form>
-        <br/>
-        <p><a class="btn btn-primary" href="{% url 'article_list' %}" role="button"> 
-            View all article</a></p> 
-    {% else %}
-        <p>You are not logged in</p>
+            <button type="submit" class="btn btn-outline-danger">
+              🚪 Log Out
+            </button>
+          </form>
+        </div>
 
-        <a href="{% url 'login' %}">Log In</a> |
-        <a href="{% url 'signup' %}">Sign Up</a>
-    {% endif %}
+      </div>
+    </div>
+
+  {% else %}
+
+    <!-- Logged out view -->
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+      <div class="card-body">
+
+        <h3 class="card-title mb-3">
+          📰 Welcome to Xnews
+        </h3>
+
+        <p class="text-muted">
+          Your daily source for the latest articles.
+        </p>
+
+        <div class="d-grid gap-2 mt-4">
+          <a href="{% url 'login' %}" class="btn btn-outline-primary">
+            Log In
+          </a>
+          <a href="{% url 'signup' %}" class="btn btn-primary">
+            Sign Up
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  {% endif %}
+
+</div>
+
 {% endblock content %}

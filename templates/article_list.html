@@ -3,25 +3,56 @@
 {% block title %}Articles{% endblock title %}
 
 {% block content %}
-{% for article in article_list %}
-<div class="card">
-  <div class="card-header">
-    <span class="fw-bold">
-      <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
-    </span> &middot;
-    <span class="text-muted">by {{ article.author }} |
-      {{ article.date }}</span>
+<div class="container mt-4">
+  {% for article in article_list %}
+  <div class="card shadow-sm mb-4 border-0">
+    
+    <!-- Header -->
+    <div class="card-header bg-white border-0">
+      <h5 class="mb-1">
+        <a href="{{ article.get_absolute_url }}" class="text-decoration-none text-dark fw-bold">
+          {{ article.title }}
+        </a>
+      </h5>
+      <small class="text-muted">
+        By {{ article.author }} · {{ article.date|date:"M d, Y" }}
+      </small>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+      <p class="card-text text-secondary">
+        {{ article.body|truncatewords:40 }}
+      </p>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="{{ article.get_absolute_url }}" class="btn btn-sm btn-outline-primary">
+          💬 Read & Comment
+        </a>
+
+        {% if article.author.pk == request.user.pk %}
+        <div>
+          <a href="{% url 'article_edit' article.pk %}" class="btn btn-sm btn-outline-secondary">
+            ✏️ Edit
+          </a>
+          <a href="{% url 'article_delete' article.pk %}" class="btn btn-sm btn-outline-danger">
+            🗑 Delete
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer bg-light border-0">
+      <small class="text-muted">
+        {{ article.comment_set.count }} comments
+      </small>
+    </div>
+
   </div>
-  <div class="card-body">
-    {{ article.body }}
-  </div>
-  <div class="card-footer text-center text-muted">
-    {% if article.author.pk == request.user.pk %}
-    <a href="{% url 'article_edit' article.pk %}">Edit</a>
-    <a href="{% url 'article_delete' article.pk %}">Delete</a>
-    {% endif %}
-  </div>
+  {% empty %}
+  <p class="text-center text-muted">No articles yet.</p>
+  {% endfor %}
 </div>
-<br />
-{% endfor %}
 {% endblock content %}
