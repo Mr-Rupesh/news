@@ -89,6 +89,7 @@ TEMPLATES = [
 # DATABASE
 # ========================
 
+
 DATABASES = {
     "default": env.dj_db_url(
         "DATABASE_URL",
