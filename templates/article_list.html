@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Articles{% endblock title %}
+{% block title %}News{% endblock title %}
 
 {% block content %}
 <div class="container mt-4">
   {% for article in article_list %}
   <div class="card shadow-sm mb-4 border-0">
-    
+
     <!-- Header -->
     <div class="card-header bg-white border-0">
       <h5 class="mb-1">
@@ -15,9 +15,16 @@
         </a>
       </h5>
       <small class="text-muted">
-        By {{ article.author }} · {{ article.date|date:"M d, Y" }}
+        From {{ article.source_name }} · {{ article.published_at|date:"M d, Y" }}
       </small>
     </div>
+
+    <!-- Image -->
+    {% if article.image_url %}
+    <div class="px-3">
+      <img src="{{ article.image_url }}" alt="{{ article.title }}" class="img-fluid rounded" style="max-height: 300px; object-fit: cover; width: 100%;">
+    </div>
+    {% endif %}
 
     <!-- Body -->
     <div class="card-body">
@@ -29,17 +36,9 @@
         <a href="{{ article.get_absolute_url }}" class="btn btn-sm btn-outline-primary">
           💬 Read & Comment
         </a>
-
-        {% if article.author.pk == request.user.pk %}
-        <div>
-          <a href="{% url 'article_edit' article.pk %}" class="btn btn-sm btn-outline-secondary">
-            ✏️ Edit
-          </a>
-          <a href="{% url 'article_delete' article.pk %}" class="btn btn-sm btn-outline-danger">
-            🗑 Delete
-          </a>
-        </div>
-        {% endif %}
+        <a href="{{ article.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+          🔗 Read on {{ article.source_name }}
+        </a>
       </div>
     </div>
 
@@ -52,7 +51,10 @@
 
   </div>
   {% empty %}
-  <p class="text-center text-muted">No articles yet.</p>
+  <div class="text-center text-muted py-5">
+    <p>No news articles yet.</p>
+    <p><small>Run <code>python manage.py fetch_news</code> to fetch the latest news.</small></p>
+  </div>
   {% endfor %}
 </div>
 {% endblock content %}

@@ -37,12 +37,9 @@
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'home' %}">Home</a>
         </li>
-
         {% if user.is_authenticated %}
         <li class="nav-item">
-          <a href="{% url 'article_new' %}" class="nav-link">
-            ➕ New Article
-          </a>
+          <a class="nav-link" href="{% url 'article_list' %}">News</a>
         </li>
         {% endif %}
       </ul>
@@ -98,7 +95,7 @@
 
 <!-- Footer -->
 <footer class="text-center text-muted py-3">
-  <small>© 2026 Xnews</small>
+  <small>© 2026 Xnews - Live News Aggregator</small>
 </footer>
 
 <!-- Bootstrap JS -->

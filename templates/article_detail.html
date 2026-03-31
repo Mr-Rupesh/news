@@ -6,27 +6,33 @@
 
   <!-- Article -->
   <div class="card shadow-sm mb-4">
+    {% if object.image_url %}
+    <img src="{{ object.image_url }}" alt="{{ object.title }}" class="card-img-top" style="max-height: 400px; object-fit: cover;">
+    {% endif %}
     <div class="card-body">
       <h2 class="card-title fw-bold">{{ object.title }}</h2>
       <p class="text-muted mb-3">
-        By {{ object.author }} · {{ object.date|date:"M d, Y" }}
+        From {{ object.source_name }} · {{ object.published_at|date:"M d, Y H:i" }}
       </p>
       <p class="card-text">
         {{ object.body }}
       </p>
+      <a href="{{ object.url }}" target="_blank" class="btn btn-primary">
+        🔗 Read Full Article on {{ object.source_name }}
+      </a>
     </div>
   </div>
 
   <!-- Comments Section -->
   <div class="card mb-4">
     <div class="card-header fw-bold">
-      💬 Comments
+      💬 Comments ({{ article.comment_set.count }})
     </div>
     <div class="card-body">
       {% for comment in article.comment_set.all %}
         <div class="mb-3">
           <strong>{{ comment.author }}</strong>
-          <span class="text-muted">·</span>
+          <span class="text-muted">· {{ comment.author.username }}</span>
           <p class="mb-1">{{ comment }}</p>
         </div>
         <hr>
@@ -55,19 +61,8 @@
   <!-- Actions -->
   <div class="d-flex justify-content-between align-items-center">
     <a href="{% url 'article_list' %}" class="btn btn-outline-secondary">
-      ← Back to Articles
+      ← Back to News
     </a>
-
-    {% if article.author.pk == request.user.pk %}
-      <div>
-        <a href="{% url 'article_edit' article.pk %}" class="btn btn-outline-primary btn-sm">
-          ✏️ Edit
-        </a>
-        <a href="{% url 'article_delete' article.pk %}" class="btn btn-outline-danger btn-sm">
-          🗑 Delete
-        </a>
-      </div>
-    {% endif %}
   </div>
 
 </div>
