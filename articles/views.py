@@ -1,4 +1,7 @@
+import datetime
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView, DetailView, FormView
 from django.views.generic.detail import SingleObjectMixin
@@ -11,6 +14,15 @@ from .models import Article
 class ArticleListView(LoginRequiredMixin, ListView):
     model = Article
     template_name = "article_list.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # If "all=1" is in query params, show all news
+        if self.request.GET.get("all") == "1":
+            return queryset
+        # Otherwise, filter to last 1 hour
+        one_hour_ago = timezone.now() - datetime.timedelta(hours=1)
+        return queryset.filter(published_at__gte=one_hour_ago)
 
 
 class CommentGet(DetailView):

@@ -4,6 +4,17 @@
 
 {% block content %}
 <div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">
+      {% if request.GET.all == "1" %}All News{% else %}Latest News (Last 1 Hour){% endif %}
+    </h4>
+    {% if request.GET.all == "1" %}
+      <a href="{% url 'article_list' %}" class="btn btn-outline-secondary btn-sm">Show Last 1 Hour</a>
+    {% else %}
+      <a href="?all=1" class="btn btn-outline-secondary btn-sm">Show All News</a>
+    {% endif %}
+  </div>
+
   {% for article in article_list %}
   <div class="card shadow-sm mb-4 border-0">
 
@@ -15,7 +26,7 @@
         </a>
       </h5>
       <small class="text-muted">
-        From {{ article.source_name }} · {{ article.published_at|date:"M d, Y" }}
+        From {{ article.source_name }} · {{ article.published_at|date:"M d, Y H:i" }}
       </small>
     </div>
 
@@ -52,8 +63,8 @@
   </div>
   {% empty %}
   <div class="text-center text-muted py-5">
-    <p>No news articles yet.</p>
-    <p><small>Run <code>python manage.py fetch_news</code> to fetch the latest news.</small></p>
+    <p>No news articles in the last hour.</p>
+    <p><a href="?all=1" class="btn btn-outline-primary">View All News</a></p>
   </div>
   {% endfor %}
 </div>
