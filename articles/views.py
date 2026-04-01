@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView, DetailView, FormView
@@ -9,6 +10,7 @@ from django.urls import reverse
 
 from .forms import CommentForm
 from .models import Article
+from .services.news_api import fetch_top_headlines, save_articles
 
 
 class ArticleListView(LoginRequiredMixin, ListView):
@@ -64,3 +66,22 @@ class ArticleDetailView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         view = CommentPost.as_view()
         return view(request, *args, **kwargs)
+
+
+class FetchNewsView(View):
+    """Trigger news fetch via HTTP GET (for Render free tier without shell)."""
+
+    def get(self, request):
+        try:
+            data = fetch_top_headlines(count=20)
+            saved = save_articles(data)
+            return JsonResponse({
+                "status": "success",
+                "saved": saved,
+                "message": f"Fetched and saved {saved} new articles"
+            })
+        except Exception as e:
+            return JsonResponse({
+                "status": "error",
+                "message": str(e)
+            }, status=500)
