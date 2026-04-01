@@ -22,9 +22,9 @@ class ArticleListView(LoginRequiredMixin, ListView):
         # If "all=1" is in query params, show all news
         if self.request.GET.get("all") == "1":
             return queryset
-        # Otherwise, filter to last 1 hour
-        one_hour_ago = timezone.now() - datetime.timedelta(hours=1)
-        return queryset.filter(published_at__gte=one_hour_ago)
+        # Otherwise, filter to last 24 hours
+        one_day_ago = timezone.now() - datetime.timedelta(days=1)
+        return queryset.filter(published_at__gte=one_day_ago)
 
 
 class CommentGet(DetailView):

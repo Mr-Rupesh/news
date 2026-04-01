@@ -6,10 +6,10 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">
-      {% if request.GET.all == "1" %}All News{% else %}Latest News (Last 1 Hour){% endif %}
+      {% if request.GET.all == "1" %}All News{% else %}Latest News (Last 24 Hours){% endif %}
     </h4>
     {% if request.GET.all == "1" %}
-      <a href="{% url 'article_list' %}" class="btn btn-outline-secondary btn-sm">Show Last 1 Hour</a>
+      <a href="{% url 'article_list' %}" class="btn btn-outline-secondary btn-sm">Show Last 24 Hours</a>
     {% else %}
       <a href="?all=1" class="btn btn-outline-secondary btn-sm">Show All News</a>
     {% endif %}
@@ -63,7 +63,7 @@
   </div>
   {% empty %}
   <div class="text-center text-muted py-5">
-    <p>No news articles in the last hour.</p>
+    <p>No news articles in the last 24 hours.</p>
     <p><a href="?all=1" class="btn btn-outline-primary">View All News</a></p>
   </div>
   {% endfor %}
